@@ -45,7 +45,7 @@ export const signUpController = asyncHandler(
       });
     } else {
       res.status(400).json({
-        error: 'Something went wrong',
+        message: 'User not created',
       });
     }
   }
