@@ -21,7 +21,7 @@ app.use(
 
 const PORT = process.env.PORT || 8000;
 
-app.use('/auth', authRoute);
+app.use('/api/auth', authRoute);
 
 app.use(errorMiddleware);
 
