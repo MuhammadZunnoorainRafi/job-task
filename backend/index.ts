@@ -5,6 +5,7 @@ import authRoute from './routes/authRoute';
 import 'colors';
 import { connectDB } from './config/connectDb';
 import { errorMiddleware } from './middlewares/errorMiddleware';
+import taskRoute from './routes/taskRoute';
 
 dotenv.config();
 connectDB();
@@ -22,6 +23,7 @@ app.use(
 const PORT = process.env.PORT || 8000;
 
 app.use('/api/auth', authRoute);
+app.use('/api/task', taskRoute);
 
 app.use(errorMiddleware);
 

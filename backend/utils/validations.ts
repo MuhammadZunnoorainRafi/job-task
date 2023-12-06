@@ -18,3 +18,8 @@ export const signInValidation = z.object({
     })
     .min(6, 'Password must be above 5 characters'),
 });
+
+export const taskValidation = z.object({
+  title: z.string().min(1, 'Enter title'),
+  description: z.string().min(1, 'Enter title'),
+});
