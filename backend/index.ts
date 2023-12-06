@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoute from './routes/authRoute';
 import 'colors';
 import { connectDB } from './config/connectDb';
+import { errorMiddleware } from './middlewares/errorMiddleware';
 
 dotenv.config();
 connectDB();
@@ -21,6 +22,8 @@ app.use(
 const PORT = process.env.PORT || 8000;
 
 app.use('/auth', authRoute);
+
+app.use(errorMiddleware);
 
 app.listen(PORT, () =>
   console.log(`server is running on PORT : http://localhost:${PORT}`)
