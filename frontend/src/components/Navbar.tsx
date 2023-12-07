@@ -14,26 +14,6 @@ function Navbar() {
         <h1 className="font-semibold text-xl">Task</h1>
       </div>
 
-      <div className="space-x-3">
-        <Link
-          className={`${
-            pathname === '/' ? 'text-slate-950 font-semibold' : 'text-slate-800'
-          }`}
-          to="/"
-        >
-          Dashboard
-        </Link>
-        <Link
-          className={`${
-            pathname === '/tasks'
-              ? 'text-slate-950 font-semibold'
-              : 'text-slate-800'
-          }`}
-          to="/tasks"
-        >
-          Tasks
-        </Link>
-      </div>
       <div>
         {user ? (
           <DropdownMenu.Root>

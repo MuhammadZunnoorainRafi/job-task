@@ -4,10 +4,16 @@ import { ITask } from '../utils/types';
 import { useAppSelector } from './RTKhooks';
 
 export const useGetTaskQuery = () => {
+  const { user } = useAppSelector((store) => store.authReducer);
   return useQuery({
     queryKey: ['tasks'],
     queryFn: async () => {
-      const res = await axios.get('/api/task/get');
+      const res = await axios.get('/api/task/get', {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      return res.data;
     },
   });
 };

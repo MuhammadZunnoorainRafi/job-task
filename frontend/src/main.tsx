@@ -14,7 +14,6 @@ import {
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Tasks from './pages/Tasks.tsx';
-import Dashboard from './pages/Dashboard.tsx';
 import { Provider } from 'react-redux';
 import { store } from './store.ts';
 import Protect from './protect/RouteProtect.tsx';
@@ -33,18 +32,11 @@ const router = createBrowserRouter(
         index
         element={
           <Protect>
-            <Dashboard />
-          </Protect>
-        }
-      />
-      <Route
-        path="/tasks"
-        element={
-          <Protect>
             <Tasks />
           </Protect>
         }
       />
+
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/signIn" element={<SignIn />} />
     </Route>
