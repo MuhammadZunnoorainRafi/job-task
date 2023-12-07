@@ -15,22 +15,41 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Tasks from './pages/Tasks.tsx';
 import Dashboard from './pages/Dashboard.tsx';
+import { Provider } from 'react-redux';
+import { store } from './store.ts';
+import Protect from './protect/RouteProtect.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index element={<Dashboard />} />
+      <Route
+        index
+        element={
+          <Protect>
+            <Dashboard />
+          </Protect>
+        }
+      />
+      <Route
+        path="/tasks"
+        element={
+          <Protect>
+            <Tasks />
+          </Protect>
+        }
+      />
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/signIn" element={<SignIn />} />
-      <Route path="/tasks" element={<Tasks />} />
     </Route>
   )
 );
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Theme>
-      <RouterProvider router={router} />
-    </Theme>
+    <Provider store={store}>
+      <Theme>
+        <RouterProvider router={router} />
+      </Theme>
+    </Provider>
   </React.StrictMode>
 );

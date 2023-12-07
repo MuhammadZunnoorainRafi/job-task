@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 
 function SignIn() {
   return (
-    <div className="flex min-h-screen justify-center">
+    <div className="flex  justify-center">
       {/* Left side */}
-      <div className=" bg-slate-100 hidden flex-[1.4] lg:block">
+      <div className=" hidden flex-[1.4] lg:block">
         <div>
           <img
             src="/login-bg.svg"
@@ -17,8 +17,8 @@ function SignIn() {
       </div>
 
       {/* Right Side */}
-      <div className="flex-1 flex items-center min-h-screen justify-center">
-        <div className="flex flex-col w-[480px] space-y-5  justify-center p-8 rounded-md">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-col w-[480px] space-y-5  justify-center p-8 rounded-lg border border-slate-200">
           <div className="space-y-2">
             <h1 className="font-bold text-2xl">Welcome to Task</h1>
             <p className="text-gray-800">Your way to your goals</p>
@@ -48,10 +48,7 @@ function SignIn() {
           </div>
 
           <div>
-            <button className="bg-blue-400 hover:bg-blue-500 transition-colors text-white w-full py-[10px] rounded-md">
-              {' '}
-              Sign In
-            </button>
+            <button className="btn-primary w-full"> Sign In</button>
           </div>
           <div className="gap-3 flex items-center">
             <p>New to Task?</p>

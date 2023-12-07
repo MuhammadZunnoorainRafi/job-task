@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 function SignUp() {
   return (
-    <div className="flex min-h-screen justify-center">
-      <div className="flex-[1.4] bg-slate-100">
+    <div className="flex justify-center">
+      <div className="hidden flex-[1.4] lg:block">
         <div>
           <img
             src="/login-bg.svg"
@@ -16,8 +16,8 @@ function SignUp() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center min-h-screen justify-center">
-        <div className="flex flex-col w-[480px] space-y-5  justify-center p-8 rounded-md">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-col w-[480px] space-y-5 border border-slate-200 justify-center p-8 rounded-lg">
           <div className="space-y-2">
             <h1 className="font-bold text-2xl">Welcome to Task</h1>
             <p className="text-gray-800">Your way to your goals</p>
@@ -60,10 +60,7 @@ function SignUp() {
           </div>
 
           <div>
-            <button className="bg-blue-400 hover:bg-blue-500 transition-colors text-white w-full py-[10px] rounded-md">
-              {' '}
-              Sign Up
-            </button>
+            <button className="btn-primary w-full"> Sign Up</button>
           </div>
           <div className="gap-3 flex items-center">
             <p>Already have an account?</p>

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import Cookie from 'js-cookie';
 
 interface IUser {
   id: string;
@@ -12,9 +13,7 @@ interface IInitialState {
 }
 
 const initialState: IInitialState = {
-  user: localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user')!)
-    : null,
+  user: Cookie.get('user') ? JSON.parse(Cookie.get('user')!) : null,
 };
 
 const authSlice = createSlice({
@@ -23,15 +22,15 @@ const authSlice = createSlice({
   reducers: {
     signUpUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
-      localStorage.setItem('user', JSON.stringify(action.payload));
+      Cookie.set('user', JSON.stringify(action.payload));
     },
     signInUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
-      localStorage.setItem('user', JSON.stringify(action.payload));
+      Cookie.set('user', JSON.stringify(action.payload));
     },
     logoutUser: (state) => {
       state.user = null;
-      localStorage.removeItem('user');
+      Cookie.remove('user');
     },
   },
 });
