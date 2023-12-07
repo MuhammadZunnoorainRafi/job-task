@@ -13,6 +13,12 @@ export type ITask = {
   description: string;
 };
 
+export type ITaskEdit = {
+  id: string;
+  title: string;
+  description: string;
+};
+
 export type TaskStats = {
   _id: string;
   title: string;

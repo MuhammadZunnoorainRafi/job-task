@@ -18,9 +18,11 @@ function Tasks() {
       {isPending ? (
         <p>Loading...</p>
       ) : data ? (
-        data.map((task: TaskStats) => {
-          return <TaskUI key={task._id} task={task} />;
-        })
+        <div className="space-y-3">
+          {data.map((task: TaskStats) => {
+            return <TaskUI key={task._id} task={task} />;
+          })}
+        </div>
       ) : (
         <p className="pt-12 text-center font-mono tracking-widest text-slate-700 text-2xl font-semibold">
           No Task yet!

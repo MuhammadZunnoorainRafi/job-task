@@ -4,28 +4,51 @@ import { z } from 'zod';
 import { taskValidation } from '../utils/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { useCreateTaskQuery } from '../hooks/taskQueryHooks';
+import {
+  useCreateTaskQuery,
+  useUpdateTaskQuery,
+} from '../hooks/taskQueryHooks';
 import toast from 'react-hot-toast';
 import { type IError, errorHandler } from '../utils/errorHandler';
+import { ITaskEdit } from '../utils/types';
 
-function TaskForm() {
+function TaskForm({
+  taskEdit,
+  setIsOpen,
+}: {
+  taskEdit?: ITaskEdit;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [open, setOpen] = useState(false);
   const { mutateAsync, isPending } = useCreateTaskQuery();
+  const { mutateAsync: updateMutateAsync, isPending: updateIsPending } =
+    useUpdateTaskQuery();
 
   type Form = z.infer<typeof taskValidation>;
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<Form>({
+    defaultValues: {
+      description: taskEdit?.description,
+    },
     resolver: zodResolver(taskValidation),
   });
 
   const formSubmit = async (data: Form) => {
     try {
-      await mutateAsync(data);
+      if (taskEdit) {
+        await updateMutateAsync({ id: taskEdit.id, ...data });
+      } else {
+        await mutateAsync(data);
+      }
+      setIsOpen && setIsOpen(false);
       setOpen(false);
+      reset();
     } catch (error) {
+      setIsOpen && setIsOpen(false);
       toast.error(errorHandler(error as IError));
     }
   };
@@ -34,18 +57,18 @@ function TaskForm() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger>
         <Button
-          className="hover:cursor-pointer w-24"
-          variant="solid"
+          className="hover:cursor-pointer w-24 "
+          variant={taskEdit ? 'ghost' : 'solid'}
           highContrast
         >
-          + Add
+          {taskEdit ? 'Edit' : '+ Add'}
         </Button>
       </Dialog.Trigger>
 
       <Dialog.Content style={{ maxWidth: 450 }}>
-        <Dialog.Title>Edit profile</Dialog.Title>
+        <Dialog.Title>{taskEdit ? 'Edit' : 'Add'} Task</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Make changes to your profile.
+          {taskEdit ? 'Create your task.' : 'Make changes to your task.'}
         </Dialog.Description>
 
         <form onSubmit={handleSubmit(formSubmit)} className="space-y-4">
@@ -55,6 +78,7 @@ function TaskForm() {
             </label>
             <input
               {...register('title')}
+              defaultValue={taskEdit?.title}
               type="text"
               id="title"
               className="w-full border border-slate-300 outline-blue-500 rounded-md p-2 "
@@ -70,6 +94,7 @@ function TaskForm() {
             </label>
             <input
               {...register('description')}
+              // defaultValue={taskEdit?.description}
               type="text"
               id="description"
               className="w-full border border-slate-300 outline-blue-500 rounded-md p-2 "
@@ -81,24 +106,22 @@ function TaskForm() {
 
           <Flex gap="3" mt="4" justify="end">
             <Dialog.Close>
-              <Button variant="soft" color="gray">
+              <Button
+                onClick={setIsOpen && (() => setIsOpen(false))}
+                variant="soft"
+                color="gray"
+              >
                 Cancel
               </Button>
             </Dialog.Close>
             <Button
               variant="solid"
               highContrast
-              disabled={isPending}
+              disabled={isPending || updateIsPending}
               type="submit"
-              //   className="btn-primary w-full disabled:bg-blue-400 disabled:cursor-not-allowed"
+              className="disabled:cursor-not-allowed"
             >
-              {isPending ? (
-                <div className=" flex items-center justify-center gap-1">
-                  Add
-                </div>
-              ) : (
-                'Add'
-              )}
+              Add
             </Button>
           </Flex>
         </form>

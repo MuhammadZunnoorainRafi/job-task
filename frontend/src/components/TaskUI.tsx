@@ -2,11 +2,16 @@ import { Button, DropdownMenu } from '@radix-ui/themes';
 import { TaskStats } from '../utils/types';
 import moment from 'moment';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { useDeleteTaskQuery } from '../hooks/taskQueryHooks';
+import TaskForm from './TaskForm';
+import { useState } from 'react';
 
 function TaskUI({ task }: { task: TaskStats }) {
-  console.log(task);
+  const [isOpen, setIsOpen] = useState(false);
+  const { mutate } = useDeleteTaskQuery();
+
   return (
-    <div className="rounded-lg border border-slate-200 p-3">
+    <div className="rounded-lg border border-slate-200 shadow-md p-3">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-bold text-lg text-slate-900">{task.title}</h1>
@@ -16,15 +21,23 @@ function TaskUI({ task }: { task: TaskStats }) {
           </p>
         </div>
         <div>
-          <DropdownMenu.Root>
+          <DropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenu.Trigger>
               <Button variant="ghost" className="hover:cursor-pointer">
                 <BsThreeDotsVertical size={20} />
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content variant="solid">
-              <DropdownMenu.Item>Edit</DropdownMenu.Item>
-              <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
+              <div>
+                <TaskForm
+                  setIsOpen={setIsOpen}
+                  taskEdit={{ id: task._id, ...task }}
+                />
+              </div>
+
+              <DropdownMenu.Item onClick={() => mutate(task._id)} color="red">
+                Delete
+              </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         </div>
