@@ -1,16 +1,24 @@
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInValidation } from '../utils/validations';
 import { type IError, errorHandler } from '../utils/errorHandler';
 import toast from 'react-hot-toast';
-import { useAppDispatch } from '../hooks/RTKhooks';
+import { useAppDispatch, useAppSelector } from '../hooks/RTKhooks';
 import { signInUser } from '../slice/authSlice';
-import { useSignInQueryHook } from '../hooks/reactQueryHooks';
+import { useSignInQueryHook } from '../hooks/userQueryHooks';
 
 function SignIn() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { user } = useAppSelector((store) => store.authReducer);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [navigate, user]);
 
   const { mutateAsync, isPending } = useSignInQueryHook();
 
@@ -27,7 +35,7 @@ function SignIn() {
   const formSubmit = async (data: Form) => {
     try {
       const logUser = await mutateAsync(data);
-      toast.success(`${logUser.name} logged in`);
+      toast.success(`${logUser.name} Signed in`);
       dispatch(signInUser(logUser));
       reset();
       navigate('/');
@@ -39,7 +47,7 @@ function SignIn() {
   return (
     <div className="flex  justify-center">
       {/* Left side */}
-      <div className=" hidden flex-[1.4] lg:block">
+      <div className=" hidden flex-1 lg:block">
         <div>
           <img
             src="/login-bg.svg"
@@ -52,7 +60,7 @@ function SignIn() {
       </div>
 
       {/* Right Side */}
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-start">
         <div className="flex flex-col w-[480px] space-y-5  justify-center p-8 rounded-lg border border-slate-200">
           <div className="space-y-2">
             <h1 className="font-bold text-2xl">Welcome to Task</h1>

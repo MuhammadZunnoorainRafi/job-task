@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../hooks/RTKhooks';
-import { useSignUpQueryHook } from '../hooks/reactQueryHooks';
+import { useAppDispatch, useAppSelector } from '../hooks/RTKhooks';
+import { useSignUpQueryHook } from '../hooks/userQueryHooks';
 import { signUpValidation } from '../utils/validations';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -11,6 +12,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 function SignUp() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { user } = useAppSelector((store) => store.authReducer);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [navigate, user]);
 
   const { mutateAsync, isPending } = useSignUpQueryHook();
 
@@ -27,7 +35,7 @@ function SignUp() {
   const formSubmit = async (data: Form) => {
     try {
       const regUser = await mutateAsync(data);
-      toast.success(`${regUser.name} logged in`);
+      toast.success(`${regUser.name} Signed up`);
       dispatch(signUpUser(regUser));
       navigate('/');
       reset();
@@ -37,7 +45,7 @@ function SignUp() {
   };
   return (
     <div className="flex justify-center">
-      <div className="hidden flex-[1.4] lg:block">
+      <div className="hidden flex-1 lg:block">
         <div>
           <img
             src="/login-bg.svg"
@@ -49,7 +57,7 @@ function SignUp() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-start">
         <div className="flex flex-col w-[480px] space-y-5 border border-slate-200 justify-center p-8 rounded-lg">
           <div className="space-y-2">
             <h1 className="font-bold text-2xl">Welcome to Task</h1>

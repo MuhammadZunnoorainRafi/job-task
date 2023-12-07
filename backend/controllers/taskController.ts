@@ -30,13 +30,12 @@ export const createTaskController = asyncHandler(
       res.status(400).json(fromZodError(validation.error));
       return;
     }
-    const { title, description, priority } = validation.data;
+    const { title, description } = validation.data;
 
     const newTask = await Task.create({
       userId: req.user?._id,
       title,
       description,
-      priority,
     });
 
     if (newTask) {
@@ -44,7 +43,7 @@ export const createTaskController = asyncHandler(
         id: newTask._id,
         title: newTask.title,
         description: newTask.description,
-        priority: newTask.priority,
+
         createdAt: newTask.createdAt,
         updatedAt: newTask.updatedAt,
       });
@@ -67,11 +66,11 @@ export const updateTaskController = asyncHandler(
       res.status(400).json(fromZodError(validation.error));
       return;
     }
-    const { title, description, id, priority } = validation.data;
+    const { title, description, id } = validation.data;
 
     const updatedTask = await Task.findByIdAndUpdate(
       id,
-      { title, description, priority },
+      { title, description },
       { new: true }
     );
 
