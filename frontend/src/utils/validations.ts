@@ -21,11 +21,11 @@ export const signInValidation = z.object({
 
 export const taskValidation = z.object({
   title: z.string().min(1, 'Enter title'),
-  description: z.string().min(1, 'Enter title'),
+  description: z.string().min(1, 'Enter description'),
 });
 
 export const taskUpdateValidation = z.object({
   id: z.string().min(1, 'Enter Id'),
   title: z.string().min(1, 'Enter title'),
-  description: z.string().min(1, 'Enter title'),
+  description: z.string().min(1, 'Enter description'),
 });

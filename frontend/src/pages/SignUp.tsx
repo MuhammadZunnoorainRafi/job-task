@@ -57,7 +57,7 @@ function SignUp() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-start">
+      <div className="flex-1 flex items-center justify-center lg:justify-start">
         <div className="flex flex-col w-[480px] space-y-5 border border-slate-200 justify-center p-8 rounded-lg">
           <div className="space-y-2">
             <h1 className="font-bold text-2xl">Welcome to Task</h1>

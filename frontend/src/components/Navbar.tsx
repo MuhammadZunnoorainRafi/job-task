@@ -17,7 +17,9 @@ function Navbar() {
         {user ? (
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button className="text-lg w-32">{user.name}</Button>
+              <Button className="text-lg w-32 hover:cursor-pointer">
+                {user.name}
+              </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content
               className="w-56"

@@ -44,9 +44,12 @@ function TaskForm({
       } else {
         await mutateAsync(data);
       }
+      reset({
+        title: '',
+        description: '',
+      });
       setIsOpen && setIsOpen(false);
       setOpen(false);
-      reset();
     } catch (error) {
       setIsOpen && setIsOpen(false);
       toast.error(errorHandler(error as IError));
