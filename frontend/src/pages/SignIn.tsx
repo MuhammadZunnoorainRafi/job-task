@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 function SignIn() {
@@ -6,15 +5,6 @@ function SignIn() {
     <div className="flex min-h-screen justify-center">
       {/* Left side */}
       <div className=" bg-slate-100 hidden flex-[1.4] lg:block">
-        <nav className="h-[4.3rem] flex items-center px-5 ">
-          <img
-            height={190}
-            width={180}
-            alt="logo image error"
-            src="/vite.svg"
-          />
-          <h1 className="font-bold">Task</h1>
-        </nav>
         <div>
           <img
             src="/login-bg.svg"
@@ -65,7 +55,7 @@ function SignIn() {
           </div>
           <div className="gap-3 flex items-center">
             <p>New to Task?</p>
-            <Link href="/signUp" className="text-blue-500">
+            <Link to="/signUp" className="text-blue-500">
               Create an account
             </Link>
           </div>
