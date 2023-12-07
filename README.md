@@ -2,12 +2,12 @@
 
 This is a simple full-stack web application for managing tasks.
 
-# Getting Started
+# Run Locally
 
-Install dependencies (Do this from the root of this application)
+For Installing all dependencies (Do this from the root of this application)
 
 ```bash
-  npm install
+  npm run mount
 ```
 
 Start the server (Do this from the root of this application)
