@@ -35,9 +35,16 @@ function TaskUI({ task }: { task: TaskStats }) {
                 />
               </div>
 
-              <DropdownMenu.Item onClick={() => mutate(task._id)} color="red">
+              <Button
+                variant="ghost"
+                color="red"
+                onClick={() => {
+                  mutate(task._id);
+                  setIsOpen(false);
+                }}
+              >
                 Delete
-              </DropdownMenu.Item>
+              </Button>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         </div>

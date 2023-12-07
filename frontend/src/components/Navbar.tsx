@@ -1,5 +1,5 @@
 import { Button, DropdownMenu } from '@radix-ui/themes';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/RTKhooks';
 import { logoutUser } from '../slice/authSlice';
 
@@ -7,7 +7,7 @@ function Navbar() {
   const { user } = useAppSelector((store) => store.authReducer);
   const dispatch = useAppDispatch();
   return (
-    <div className="px-12 py-4 shadow-md bg-slate-50 flex items-center justify-between">
+    <div className="px-12 py-4 shadow-md  flex items-center justify-between">
       <div className="flex items-center px-5 gap-1 ">
         <img className="h-5 w-5" alt="logo image error" src="/vite.svg" />
         <h1 className="font-semibold text-xl">Task</h1>

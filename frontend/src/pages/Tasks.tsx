@@ -2,10 +2,11 @@ import TaskForm from '../components/TaskForm';
 import { useGetTaskQuery } from '../hooks/taskQueryHooks';
 import TaskUI from '../components/TaskUI';
 import { TaskStats } from '../utils/types';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 function Tasks() {
   const { data, isPending } = useGetTaskQuery();
-
+  const [parent] = useAutoAnimate();
   return (
     <div className="max-w-3xl mx-auto space-y-5">
       <div className="flex items-center justify-between pb-1 border-b border-slate-300">
@@ -18,7 +19,7 @@ function Tasks() {
       {isPending ? (
         <p>Loading...</p>
       ) : data ? (
-        <div className="space-y-3">
+        <div ref={parent} className="space-y-3">
           {data.map((task: TaskStats) => {
             return <TaskUI key={task._id} task={task} />;
           })}
