@@ -8,7 +8,8 @@ import { useState } from 'react';
 
 function TaskUI({ task }: { task: TaskStats }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate } = useDeleteTaskQuery();
+  const [isLoading, setIsLoading] = useState(false);
+  const { mutateAsync } = useDeleteTaskQuery();
 
   return (
     <div className="rounded-lg border border-slate-200 shadow-md p-3">
@@ -38,9 +39,12 @@ function TaskUI({ task }: { task: TaskStats }) {
               <Button
                 variant="ghost"
                 color="red"
-                onClick={() => {
-                  mutate(task._id);
+                disabled={isLoading}
+                onClick={async () => {
+                  setIsLoading(true);
+                  await mutateAsync(task._id);
                   setIsOpen(false);
+                  setIsLoading(false);
                 }}
               >
                 Delete
