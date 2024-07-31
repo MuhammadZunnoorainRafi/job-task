@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* custom styles */
+.btn-primary {
+  @apply px-5 py-2 rounded-md bg-blue-500 hover:bg-blue-700 transition-colors text-white;
+}
+
+.spinner {
+  @apply h-4 w-4 rounded-full border-2 border-r-transparent border-slate-100 animate-spin;
+}
