@@ -21,12 +21,9 @@ import axios from 'axios';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 axios.defaults.baseURL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:5000'
-    : import.meta.env.BASE_APU_URL;
+  process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '';
 
 const queryClient = new QueryClient();
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
