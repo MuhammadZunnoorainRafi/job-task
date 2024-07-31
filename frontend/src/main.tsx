@@ -21,7 +21,9 @@ import axios from 'axios';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 axios.defaults.baseURL =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : undefined;
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000'
+    : 'https://job-task-iqfi.onrender.com';
 
 const queryClient = new QueryClient();
 
