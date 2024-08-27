@@ -38,8 +38,7 @@ export const useCreateTaskQuery = () => {
       });
       return { previousData };
     },
-    onError: (err, newTask, context) => {
-      console.log(err);
+    onError: (err, _, context) => {
       queryClient.setQueryData(['tasks'], context?.previousData);
     },
     // Always refetch after error or success:
@@ -73,8 +72,7 @@ export const useDeleteTaskQuery = () => {
       );
       return { previousData };
     },
-    onError: (err, newTask, context) => {
-      console.log(err);
+    onError: (err, _, context) => {
       queryClient.setQueryData(['tasks'], context?.previousData);
     },
     onSettled: () => {
@@ -103,8 +101,7 @@ export const useUpdateTaskQuery = () => {
       );
       return { previousData };
     },
-    onError: (err, editedTask, context) => {
-      console.log(err);
+    onError: (err, _, context) => {
       queryClient.setQueryData(['tasks'], context?.previousData);
     },
     onSettled: () => {
