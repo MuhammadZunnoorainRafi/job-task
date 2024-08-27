@@ -23,8 +23,8 @@ function Tasks() {
         </div>
       ) : data && data.length > 0 ? (
         <div ref={parent} className="space-y-3 pb-5">
-          {data.map((task: TaskStats) => {
-            return <TaskUI key={task._id} task={task} />;
+          {data.map((task: TaskStats, ind: number) => {
+            return <TaskUI key={ind} task={task} />;
           })}
         </div>
       ) : (

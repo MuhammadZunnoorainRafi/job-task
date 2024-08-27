@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { ITask, ITaskEdit } from '../utils/types';
+import { ITask, ITaskEdit, TaskStats } from '../utils/types';
 import { useAppSelector } from './RTKhooks';
 
 export const useGetTaskQuery = () => {
@@ -30,7 +30,20 @@ export const useCreateTaskQuery = () => {
         },
       });
     },
-    onSuccess: () => {
+    onMutate: async (newTask) => {
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+      const previousData = queryClient.getQueryData(['tasks']);
+      queryClient.setQueryData(['tasks'], (oldTasks: TaskStats[]) => {
+        return [...oldTasks, newTask];
+      });
+      return { previousData };
+    },
+    onError: (err, newTask, context) => {
+      console.log(err);
+      queryClient.setQueryData(['tasks'], context?.previousData);
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
@@ -51,7 +64,20 @@ export const useDeleteTaskQuery = () => {
       };
       await axios.delete('/api/task/delete', config);
     },
-    onSuccess: () => {
+    onMutate: async (deletedTask: unknown) => {
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+      const previousData = queryClient.getQueryData(['tasks']);
+
+      queryClient.setQueryData(['tasks'], (oldTasks: TaskStats[]) =>
+        oldTasks.filter((task) => task._id !== (deletedTask as TaskStats)._id)
+      );
+      return { previousData };
+    },
+    onError: (err, newTask, context) => {
+      console.log(err);
+      queryClient.setQueryData(['tasks'], context?.previousData);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
@@ -69,7 +95,19 @@ export const useUpdateTaskQuery = () => {
         },
       });
     },
-    onSuccess: () => {
+    onMutate: async (editedTask) => {
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+      const previousData = queryClient.getQueryData(['tasks']);
+      queryClient.setQueryData(['tasks'], (oldData: TaskStats[]) =>
+        oldData.map((task) => (task._id === editedTask.id ? editedTask : task))
+      );
+      return { previousData };
+    },
+    onError: (err, editedTask, context) => {
+      console.log(err);
+      queryClient.setQueryData(['tasks'], context?.previousData);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });

@@ -8,17 +8,16 @@ import { useState } from 'react';
 
 function TaskUI({ task }: { task: TaskStats }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { mutateAsync } = useDeleteTaskQuery();
+  const { mutate } = useDeleteTaskQuery();
 
   return (
     <div className="rounded-lg border border-slate-200 shadow-md p-3">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-bold text-lg text-slate-900">{task.title}</h1>
-          <p className="text-slate-700">{task.description}</p>
+          <h1 className="font-bold text-lg text-slate-900">{task?.title}</h1>
+          <p className="text-slate-700">{task?.description}</p>
           <p className="text-xs text-slate-600">
-            {moment(task.createdAt).format('MM/DD/YYYY, h:mm a')}
+            {moment(task?.createdAt).format('MM/DD/YYYY, h:mm a')}
           </p>
         </div>
         <div>
@@ -32,19 +31,16 @@ function TaskUI({ task }: { task: TaskStats }) {
               <div>
                 <TaskForm
                   setIsOpen={setIsOpen}
-                  taskEdit={{ id: task._id, ...task }}
+                  taskEdit={{ id: task?._id, ...task }}
                 />
               </div>
 
               <Button
                 variant="ghost"
                 color="red"
-                disabled={isLoading}
-                onClick={async () => {
-                  setIsLoading(true);
-                  await mutateAsync(task._id);
+                onClick={() => {
+                  mutate(task?._id);
                   setIsOpen(false);
-                  setIsLoading(false);
                 }}
               >
                 Delete

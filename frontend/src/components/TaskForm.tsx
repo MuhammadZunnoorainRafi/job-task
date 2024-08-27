@@ -20,7 +20,7 @@ function TaskForm({
   setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [open, setOpen] = useState(false);
-  const { mutateAsync, isPending } = useCreateTaskQuery();
+  const { mutate } = useCreateTaskQuery();
   const { mutateAsync: updateMutateAsync, isPending: updateIsPending } =
     useUpdateTaskQuery();
 
@@ -42,7 +42,7 @@ function TaskForm({
       if (taskEdit) {
         await updateMutateAsync({ id: taskEdit.id, ...data });
       } else {
-        await mutateAsync(data);
+        mutate(data);
       }
       reset({
         title: '',
@@ -120,7 +120,7 @@ function TaskForm({
             <Button
               variant="solid"
               highContrast
-              disabled={isPending || updateIsPending}
+              disabled={updateIsPending}
               type="submit"
               className="disabled:cursor-not-allowed"
             >
