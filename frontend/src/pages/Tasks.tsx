@@ -7,6 +7,7 @@ import { TbLoader } from 'react-icons/tb';
 
 function Tasks() {
   const { data, isPending } = useGetTaskQuery();
+  console.log(data);
   const [parent] = useAutoAnimate();
   return (
     <div className="max-w-3xl mx-auto space-y-5">
@@ -21,11 +22,13 @@ function Tasks() {
         <div className="text-center py-20 flex items-center justify-center">
           <TbLoader size={30} className="animate-spin" />
         </div>
-      ) : data && data.length > 0 ? (
+      ) : data && data.pages && data.pages.length > 0 ? (
         <div ref={parent} className="space-y-3 pb-5">
-          {data.map((task: TaskStats, ind: number) => {
-            return <TaskUI key={ind} task={task} />;
-          })}
+          {data.pages.map((page) =>
+            page.map((task: TaskStats, ind: number) => {
+              return <TaskUI key={ind} task={task} />;
+            })
+          )}
         </div>
       ) : (
         <p className="pt-12 text-center font-mono tracking-widest text-slate-400 text-2xl font-semibold">

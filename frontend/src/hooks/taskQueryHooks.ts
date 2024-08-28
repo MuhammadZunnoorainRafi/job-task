@@ -1,19 +1,33 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import axios from 'axios';
 import { ITask, ITaskEdit, TaskStats } from '../utils/types';
 import { useAppSelector } from './RTKhooks';
 
 export const useGetTaskQuery = () => {
   const { user } = useAppSelector((store) => store.authReducer);
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['tasks'],
-    queryFn: async () => {
-      const res = await axios.get('/api/task/get', {
+    queryFn: async ({ pageParam }) => {
+      const res = await axios.get(`/api/task/get?page=${pageParam}`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       });
       return res.data;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+      console.log({ lastPage, allPages, lastPageParam });
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+      return lastPageParam + 1;
     },
   });
 };
@@ -33,12 +47,21 @@ export const useCreateTaskQuery = () => {
     onMutate: async (newTask) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] });
       const previousData = queryClient.getQueryData(['tasks']);
-      queryClient.setQueryData(['tasks'], (oldTasks: TaskStats[]) => {
-        return [...oldTasks, newTask];
-      });
+      queryClient.setQueryData(
+        ['tasks'],
+        (oldTasks: InfiniteData<TaskStats[]>) => {
+          const firstPage = oldTasks.pages[0];
+          if (firstPage) {
+            return {
+              pageParams: oldTasks.pageParams,
+              pages: [[...firstPage, newTask], ...oldTasks.pages.slice(1)],
+            };
+          }
+        }
+      );
       return { previousData };
     },
-    onError: (err, _, context) => {
+    onError: (_, __, context) => {
       queryClient.setQueryData(['tasks'], context?.previousData);
     },
     // Always refetch after error or success:
@@ -67,12 +90,20 @@ export const useDeleteTaskQuery = () => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] });
       const previousData = queryClient.getQueryData(['tasks']);
 
-      queryClient.setQueryData(['tasks'], (oldTasks: TaskStats[]) =>
-        oldTasks.filter((task) => task._id !== (deletedTask as TaskStats)._id)
+      queryClient.setQueryData(
+        ['tasks'],
+        (oldTasks: InfiniteData<TaskStats[]>) => {
+          return {
+            pageParams: oldTasks.pageParams,
+            pages: oldTasks.pages.map((page) =>
+              page.filter((task) => task._id !== (deletedTask as TaskStats)._id)
+            ),
+          };
+        }
       );
       return { previousData };
     },
-    onError: (err, _, context) => {
+    onError: (_, __, context) => {
       queryClient.setQueryData(['tasks'], context?.previousData);
     },
     onSettled: () => {
@@ -96,12 +127,22 @@ export const useUpdateTaskQuery = () => {
     onMutate: async (editedTask) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] });
       const previousData = queryClient.getQueryData(['tasks']);
-      queryClient.setQueryData(['tasks'], (oldData: TaskStats[]) =>
-        oldData.map((task) => (task._id === editedTask.id ? editedTask : task))
+      queryClient.setQueryData(
+        ['tasks'],
+        (oldData: InfiniteData<TaskStats[]>) => {
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) =>
+              page.map((task) =>
+                task._id === editedTask.id ? editedTask : task
+              )
+            ),
+          };
+        }
       );
       return { previousData };
     },
-    onError: (err, _, context) => {
+    onError: (_, __, context) => {
       queryClient.setQueryData(['tasks'], context?.previousData);
     },
     onSettled: () => {
