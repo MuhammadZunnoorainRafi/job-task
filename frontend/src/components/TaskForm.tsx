@@ -1,16 +1,16 @@
-import { Button, Dialog, Flex } from '@radix-ui/themes';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { taskValidation } from '../utils/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Dialog, Flex } from '@radix-ui/themes';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { z } from 'zod';
 import {
   useCreateTaskQuery,
   useUpdateTaskQuery,
 } from '../hooks/taskQueryHooks';
-import toast from 'react-hot-toast';
 import { type IError, errorHandler } from '../utils/errorHandler';
 import { ITaskEdit } from '../utils/types';
+import { taskValidation } from '../utils/validations';
 
 function TaskForm({
   taskEdit,
@@ -21,8 +21,7 @@ function TaskForm({
 }) {
   const [open, setOpen] = useState(false);
   const { mutate } = useCreateTaskQuery();
-  const { mutateAsync: updateMutateAsync, isPending: updateIsPending } =
-    useUpdateTaskQuery();
+  const { mutate: updateMutate } = useUpdateTaskQuery();
 
   type Form = z.infer<typeof taskValidation>;
   const {
@@ -32,15 +31,20 @@ function TaskForm({
     formState: { errors },
   } = useForm<Form>({
     defaultValues: {
+      title: taskEdit?.title,
       description: taskEdit?.description,
     },
     resolver: zodResolver(taskValidation),
   });
 
-  const formSubmit = async (data: Form) => {
+  // useEffect(() => {
+  //   reset(taskEdit);
+  // }, [reset, taskEdit]);
+
+  const formSubmit = (data: Form) => {
     try {
       if (taskEdit) {
-        await updateMutateAsync({ id: taskEdit.id, ...data });
+        updateMutate({ id: taskEdit.id, ...data });
       } else {
         mutate(data);
       }
@@ -71,7 +75,7 @@ function TaskForm({
       <Dialog.Content style={{ maxWidth: 450 }}>
         <Dialog.Title>{taskEdit ? 'Edit' : 'Add'} Task</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          {taskEdit ? 'Create your task.' : 'Make changes to your task.'}
+          {taskEdit ? 'Make changes to your task.' : 'Create your task.'}
         </Dialog.Description>
 
         <form onSubmit={handleSubmit(formSubmit)} className="space-y-4">
@@ -81,7 +85,6 @@ function TaskForm({
             </label>
             <input
               {...register('title')}
-              defaultValue={taskEdit?.title}
               type="text"
               id="title"
               className="w-full border border-slate-300 outline-blue-500 rounded-md p-2 "
@@ -97,7 +100,6 @@ function TaskForm({
             </label>
             <textarea
               {...register('description')}
-              // defaultValue={taskEdit?.description}
               id="description"
               rows={4}
               className="w-full border border-slate-300 outline-blue-500 rounded-md p-2 "
@@ -120,11 +122,10 @@ function TaskForm({
             <Button
               variant="solid"
               highContrast
-              disabled={updateIsPending}
               type="submit"
               className="disabled:cursor-not-allowed"
             >
-              Add
+              {taskEdit ? 'Edit' : 'Add'}
             </Button>
           </Flex>
         </form>

@@ -2,7 +2,6 @@ import {
   InfiniteData,
   useInfiniteQuery,
   useMutation,
-  useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
@@ -22,10 +21,10 @@ export const useGetTaskQuery = () => {
       return res.data;
     },
     initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages, lastPageParam) => {
-      console.log({ lastPage, allPages, lastPageParam });
-      if (lastPage.length === 0) {
-        return undefined;
+    getNextPageParam: (lastPage, _, lastPageParam) => {
+      console.log(lastPageParam);
+      if (lastPage.length < 5) {
+        return;
       }
       return lastPageParam + 1;
     },
@@ -54,14 +53,15 @@ export const useCreateTaskQuery = () => {
           if (firstPage) {
             return {
               pageParams: oldTasks.pageParams,
-              pages: [[...firstPage, newTask], ...oldTasks.pages.slice(1)],
+              pages: [[newTask, ...firstPage], ...oldTasks.pages.slice(1)],
             };
           }
         }
       );
       return { previousData };
     },
-    onError: (_, __, context) => {
+    onError: (err, __, context) => {
+      console.log({ err });
       queryClient.setQueryData(['tasks'], context?.previousData);
     },
     // Always refetch after error or success:
@@ -86,7 +86,7 @@ export const useDeleteTaskQuery = () => {
       };
       await axios.delete('/api/task/delete', config);
     },
-    onMutate: async (deletedTask: unknown) => {
+    onMutate: async (deletedTaskId) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] });
       const previousData = queryClient.getQueryData(['tasks']);
 
@@ -96,7 +96,7 @@ export const useDeleteTaskQuery = () => {
           return {
             pageParams: oldTasks.pageParams,
             pages: oldTasks.pages.map((page) =>
-              page.filter((task) => task._id !== (deletedTask as TaskStats)._id)
+              page.filter((task) => task._id !== deletedTaskId)
             ),
           };
         }
