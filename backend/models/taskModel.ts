@@ -1,6 +1,14 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 
-const taskSchema = new mongoose.Schema(
+interface ITask extends Document {
+  userId: Types.ObjectId | undefined;
+  title: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const taskSchema = new mongoose.Schema<ITask>(
   {
     userId: {
       type: Types.ObjectId,
@@ -21,4 +29,4 @@ const taskSchema = new mongoose.Schema(
   }
 );
 
-export const Task = mongoose.model('Task', taskSchema);
+export const Task = mongoose.model<ITask>('Task', taskSchema);

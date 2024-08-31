@@ -17,7 +17,11 @@ function TaskUI({ task }: { task: TaskStats }) {
           <h1 className="font-bold text-lg text-slate-900">{task?.title}</h1>
           <p className="text-slate-700">{task?.description}</p>
           <p className="text-xs text-slate-600">
-            {moment(task?.createdAt).format('MM/DD/YYYY, h:mm a')}
+            {moment(
+              task?.createdAt === task?.updatedAt
+                ? task?.createdAt
+                : task?.updatedAt
+            ).format('MM/DD/YYYY, h:mm a')}
           </p>
         </div>
         <div>

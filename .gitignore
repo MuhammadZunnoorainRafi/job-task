@@ -5,5 +5,5 @@ build
 /node_modules
 /build
 >>>>>>> b460833bac2b0ea3a5a24ab791954c506996c088
-.env
 dist
+config.bat

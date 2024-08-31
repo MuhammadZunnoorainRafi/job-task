@@ -10,13 +10,19 @@ import { fromZodError } from 'zod-validation-error';
 // @access Private
 export const getTaskController = asyncHandler(
   async (req: RequestWithUser, res: Response) => {
-    const allTasks = await Task.find({ userId: req.user?._id });
-    res.status(200).json(allTasks);
+    const limit = 5;
+    const page = +(req.query.page || 1);
+    const allTasks = await Task.find({ userId: req.user?._id })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .exec();
 
     if (!allTasks) {
       res.status(400);
       throw new Error('Tasks not found');
     }
+    res.status(200).json(allTasks);
   }
 );
 
